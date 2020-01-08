@@ -3,3 +3,7 @@
 ################################################################################
 
 /PaymentGateway/.vs/PaymentGateway/v16
+/PaymentGateway/bin/Debug/netcoreapp3.0
+/PaymentGateway/obj
+/PaymentGatewayTests/bin/Debug/netcoreapp3.0
+/PaymentGatewayTests/obj
