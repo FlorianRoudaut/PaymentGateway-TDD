@@ -70,6 +70,10 @@ namespace PaymentGateway.Domain.PaymentValidation
                 isValid = false;
                 errors.Add("Empty-Amount");
             }
+            else
+            {
+                isValid &= CheckAmount(request, errors);
+            }
 
             if (string.IsNullOrEmpty(request.Currency))
             {
@@ -157,9 +161,21 @@ namespace PaymentGateway.Domain.PaymentValidation
             //Currency should be in a list saved in the system
             var currency = request.Currency;
             var allowedCurrencies = _currencyRepository.LoadAll();
-            if(!allowedCurrencies.Any(t=>currency.Equals(t.Code)))
+            if (!allowedCurrencies.Any(t => currency.Equals(t.Code)))
             {
                 errors.Add("Invalid-Currency");
+                return false;
+            }
+            return true;
+        }
+
+        private bool CheckAmount(PaymentRequest request, List<string> errors)
+        {
+            //Currency should be in a list saved in the system
+            var amount = request.Amount;
+            if (amount < 0)
+            {
+                errors.Add("Invalid-Amount");
                 return false;
             }
             return true;

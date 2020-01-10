@@ -139,5 +139,16 @@ namespace PaymentGatewayTests.Domain
             Assert.AreEqual(false, isValid);
             Assert.Contains("Invalid-Currency", errors);
         }
+
+        [Test]
+        public void AmountShouldBeStrictlyPositive()
+        {
+            var request = GlobalTestSetup.InitValidRequest();
+            request.Amount = -2.0;
+            var errors = new List<string>();
+            var isValid = PaymentValidator.IsPaymentRequestValid(request, TestDate, errors);
+            Assert.AreEqual(false, isValid);
+            Assert.Contains("Invalid-Amount", errors);
+        }
     }
 }
