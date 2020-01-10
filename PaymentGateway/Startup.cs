@@ -9,6 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using PaymentGateway.Domain.PaymentValidation;
+using PaymentGateway.Repositories;
+using PaymentGateway.Services;
 
 namespace PaymentGateway
 {
@@ -25,6 +28,9 @@ namespace PaymentGateway
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddScoped<IProcessPaymentService, ProcessPaymentService>();
+            services.AddScoped<ICurrencyRepository, HarcodedCurrencyRepository>();
+            services.AddScoped<IPaymentValidator, PaymentValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

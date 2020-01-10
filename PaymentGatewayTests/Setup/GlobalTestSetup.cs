@@ -1,4 +1,8 @@
-﻿using PaymentGateway.Domain;
+﻿using PaymentGateway.Controllers;
+using PaymentGateway.Domain;
+using PaymentGateway.Domain.PaymentValidation;
+using PaymentGateway.Repositories;
+using PaymentGateway.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,6 +23,19 @@ namespace PaymentGatewayTests.Setup
             request.Amount = 100;
             request.Currency = "USD";
             return request;
+        }
+
+        public static PaymentValidator GetPaymentValidator()
+        {
+            var currencyRepository = new HarcodedCurrencyRepository();
+            return new PaymentValidator(currencyRepository);
+        }
+
+        public static ProcessPaymentController GetProcessPaymentController()
+        {
+            var paymentValidator = GetPaymentValidator();
+            var paymentService = new ProcessPaymentService(paymentValidator);
+            return new ProcessPaymentController(paymentService);
         }
     }
 }

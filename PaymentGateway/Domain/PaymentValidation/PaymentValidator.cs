@@ -1,13 +1,22 @@
-﻿using System;
+﻿using PaymentGateway.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PaymentGateway.Domain.PaymentValidation
 {
-    public static class PaymentValidator
+    public class PaymentValidator : IPaymentValidator
     {
-        public static bool IsPaymentRequestValid(PaymentRequest request, DateTime currentDate,
+        private ICurrencyRepository _currencyRepository { get; set; }
+
+        public PaymentValidator(ICurrencyRepository currencyRepository)
+        {
+            _currencyRepository = currencyRepository;
+        }
+
+        public bool IsPaymentRequestValid(PaymentRequest request, DateTime currentDate,
             List<string> errors)
         {
             var isValid = true;
@@ -22,11 +31,19 @@ namespace PaymentGateway.Domain.PaymentValidation
                 isValid = false;
                 errors.Add("Empty-CardNumber");
             }
+            else
+            {
+                isValid &= CheckCardDigits(request, errors);
+            }
 
             if (string.IsNullOrEmpty(request.Cvv))
             {
                 isValid = false;
                 errors.Add("Empty-Cvv");
+            }
+            else
+            {
+                isValid &= CheckCvvDigits(request, errors);
             }
 
             if (request.ExpiryMonth == 0)
@@ -40,6 +57,7 @@ namespace PaymentGateway.Domain.PaymentValidation
                 isValid = false;
                 errors.Add("Empty-ExpiryYear");
             }
+            isValid &= IsCardNotExpired(request, currentDate, errors);
 
             if (string.IsNullOrEmpty(request.CardHolderName))
             {
@@ -58,14 +76,15 @@ namespace PaymentGateway.Domain.PaymentValidation
                 isValid = false;
                 errors.Add("Empty-Currency");
             }
-
-            isValid &= IsCardNotExpired(request, currentDate, errors);
-
+            else
+            {
+                isValid &= CheckCurrency(request, errors);
+            }
 
             return isValid;
         }
 
-        private static bool IsCardNotExpired(PaymentRequest request, DateTime currentDate,
+        private bool IsCardNotExpired(PaymentRequest request, DateTime currentDate,
             List<string> errors)
         {
             var isValid = true;
@@ -84,6 +103,66 @@ namespace PaymentGateway.Domain.PaymentValidation
                 }
             }
             return isValid;
+        }
+
+
+        private bool CheckCardDigits(PaymentRequest request,
+            List<string> errors)
+        {
+            //Card number should be exactly 16 digits
+            //Spaces are allowed but not lettters
+            var cardNumber = request.CardNumber;
+            cardNumber = cardNumber.Replace(" ", "");
+            if (cardNumber.Length != 16)
+            {
+                errors.Add("Invalid-CardNumber");
+                return false;
+            }
+
+            var match = Regex.Match(cardNumber, @"^[0-9-]*$");
+            if (!match.Success)
+            {
+                errors.Add("Invalid-CardNumber");
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool CheckCvvDigits(PaymentRequest request, List<string> errors)
+        {
+            //Card number should be exactly 16 digits
+            //Spaces are allowed but not lettters
+            var cvv = request.Cvv;
+            cvv = cvv.Replace(" ", "");
+            var length = cvv.Length;
+            if (length != 3 && length != 4)
+            {
+                errors.Add("Invalid-Cvv");
+                return false;
+            }
+
+            var match = Regex.Match(cvv, @"^[0-9-]*$");
+            if (!match.Success)
+            {
+                errors.Add("Invalid-Cvv");
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool CheckCurrency(PaymentRequest request, List<string> errors)
+        {
+            //Currency should be in a list saved in the system
+            var currency = request.Currency;
+            var allowedCurrencies = _currencyRepository.LoadAll();
+            if(!allowedCurrencies.Any(t=>currency.Equals(t.Code)))
+            {
+                errors.Add("Invalid-Currency");
+                return false;
+            }
+            return true;
         }
     }
 }

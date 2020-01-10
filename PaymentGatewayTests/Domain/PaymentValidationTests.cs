@@ -4,6 +4,7 @@ using System.Text;
 using NUnit.Framework;
 using PaymentGateway.Domain;
 using PaymentGateway.Domain.PaymentValidation;
+using PaymentGateway.Repositories;
 using PaymentGatewayTests.Setup;
 
 namespace PaymentGatewayTests.Domain
@@ -11,6 +12,8 @@ namespace PaymentGatewayTests.Domain
     public class PaymentValidationTests
     {
         private DateTime TestDate = new DateTime(2020, 06, 15);
+
+        PaymentValidator PaymentValidator = GlobalTestSetup.GetPaymentValidator();
 
         [SetUp]
         public void Setup()
@@ -72,6 +75,69 @@ namespace PaymentGatewayTests.Domain
 
             Assert.AreEqual(false, isValid);
             Assert.Contains("Expired-Card", errors);
+        }
+
+        [Test]
+        public void CardNumberShouldHaveSixteenDigits()
+        {
+            var request = GlobalTestSetup.InitValidRequest();
+            request.CardNumber = "1234 567 8910 1";
+            var errors = new List<string>();
+            var isValid = PaymentValidator.IsPaymentRequestValid(request, TestDate, errors);
+
+            Assert.AreEqual(false, isValid);
+            Assert.Contains("Invalid-CardNumber", errors);
+
+            request = GlobalTestSetup.InitValidRequest();
+            request.CardNumber = "abcd 5679 8910 1234";
+            errors = new List<string>();
+            isValid = PaymentValidator.IsPaymentRequestValid(request, TestDate, errors);
+
+            Assert.AreEqual(false, isValid);
+            Assert.Contains("Invalid-CardNumber", errors);
+        }
+
+        [Test]
+        public void CvvShouldHaveThreeOrFourDigits()
+        {
+            //https://en.wikipedia.org/wiki/Card_security_code
+            var request = GlobalTestSetup.InitValidRequest();
+            request.Cvv = "1234";
+            var errors = new List<string>();
+            var isValid = PaymentValidator.IsPaymentRequestValid(request, TestDate, errors);
+            Assert.AreEqual(true, isValid);
+
+            request = GlobalTestSetup.InitValidRequest();
+            request.Cvv = "12345";
+            errors = new List<string>();
+            isValid = PaymentValidator.IsPaymentRequestValid(request, TestDate, errors);
+            Assert.AreEqual(false, isValid);
+            Assert.Contains("Invalid-Cvv", errors);
+
+            request = GlobalTestSetup.InitValidRequest();
+            request.Cvv = "12";
+            errors = new List<string>();
+            isValid = PaymentValidator.IsPaymentRequestValid(request, TestDate, errors);
+            Assert.AreEqual(false, isValid);
+            Assert.Contains("Invalid-Cvv", errors);
+
+            request = GlobalTestSetup.InitValidRequest();
+            request.Cvv = "abc";
+            errors = new List<string>();
+            isValid = PaymentValidator.IsPaymentRequestValid(request, TestDate, errors);
+            Assert.AreEqual(false, isValid);
+            Assert.Contains("Invalid-Cvv", errors);
+        }
+
+        [Test]
+        public void CurrencyShouldBeInList()
+        {
+            var request = GlobalTestSetup.InitValidRequest();
+            request.Currency = "CHF";
+            var errors = new List<string>();
+            var isValid = PaymentValidator.IsPaymentRequestValid(request, TestDate, errors);
+            Assert.AreEqual(false, isValid);
+            Assert.Contains("Invalid-Currency", errors);
         }
     }
 }

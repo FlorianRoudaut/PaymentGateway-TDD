@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace PaymentGatewayTests.Controllers
 {
-    public class Tests
+    public class ProcessPaymentControllerTests
     {
+        ProcessPaymentController Controller = GlobalTestSetup.GetProcessPaymentController();
+
         [SetUp]
         public void Setup()
         {
@@ -16,11 +18,9 @@ namespace PaymentGatewayTests.Controllers
         [Test]
         public async Task ProcessPaymentControllerShouldReturnResult()
         {
-            var controller = new ProcessPaymentController();
-
             var request = GlobalTestSetup.InitValidRequest();
 
-            var result = await controller.Process(request);
+            var result = await Controller.Process(request);
 
             Assert.IsNotNull(result);
             Assert.IsNull(result.GatewayError);
@@ -29,11 +29,9 @@ namespace PaymentGatewayTests.Controllers
         [Test]
         public async Task ProcessPaymentControllerShouldReturnResultWithGatewayError()
         {
-            var controller = new ProcessPaymentController();
-
             var request = new PaymentRequest();
 
-            var result = await controller.Process(request);
+            var result = await Controller.Process(request);
 
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.GatewayError);

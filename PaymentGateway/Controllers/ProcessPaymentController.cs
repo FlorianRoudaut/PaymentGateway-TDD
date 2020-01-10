@@ -13,8 +13,11 @@ namespace PaymentGateway.Controllers
     [Route("[controller]")]
     public class ProcessPaymentController : ControllerBase
     {
-        public ProcessPaymentController()
+        private IProcessPaymentService _paymentService;
+        
+        public ProcessPaymentController(IProcessPaymentService paymentService)
         {
+            _paymentService = paymentService;
         }
 
         [HttpPost("")]
@@ -23,7 +26,7 @@ namespace PaymentGateway.Controllers
             var task = Task.Run(() => { });
             await task;
 
-            return await ProcessPaymentService.ProcessPayment(request);
+            return await _paymentService.ProcessPayment(request);
         }
     }
 }
