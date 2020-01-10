@@ -25,6 +25,12 @@ namespace PaymentGatewayTests.Controllers
             Assert.IsNotNull(result);
             Assert.AreEqual(false, result.HasGatewayError);
             Assert.IsNull(result.GatewayErrorMessage);
+
+            Assert.AreEqual("PiggyBank", result.AcquiringBank);
+            Assert.IsNotNull(result.AcquiringBankStatus);
+            Assert.IsNotEmpty(result.AcquiringBankStatus);
+            Assert.IsNotNull(result.AcquiringBankPaymentId);
+            Assert.IsNotEmpty(result.AcquiringBankPaymentId);
         }
 
         [Test]

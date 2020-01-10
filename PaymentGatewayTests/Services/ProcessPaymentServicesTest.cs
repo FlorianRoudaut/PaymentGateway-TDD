@@ -49,5 +49,17 @@ namespace PaymentGatewayTests.Services
             Assert.IsNotNull(response.AcquiringBankStatus);
             Assert.IsNotEmpty(response.AcquiringBankStatus);
         }
+
+        [Test]
+        public async Task OtherAcquirerShouldNotBeFound()
+        {
+            var request = GlobalTestSetup.InitValidRequest();
+            request.MerchantName = "Apple";
+            var response = await PaymentService.ProcessPayment(request);
+
+            Assert.AreEqual("OtherAcquirer", response.AcquiringBank);
+            Assert.AreEqual(true, response.HasGatewayError);
+            Assert.AreEqual("Invalid-AcquiringBank", response.GatewayErrorMessage);
+        }
     }
 }
