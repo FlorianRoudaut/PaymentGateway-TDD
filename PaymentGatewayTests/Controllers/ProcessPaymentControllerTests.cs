@@ -23,7 +23,8 @@ namespace PaymentGatewayTests.Controllers
             var result = await Controller.Process(request);
 
             Assert.IsNotNull(result);
-            Assert.IsNull(result.GatewayError);
+            Assert.AreEqual(false, result.HasGatewayError);
+            Assert.IsNull(result.GatewayErrorMessage);
         }
 
         [Test]
@@ -34,8 +35,9 @@ namespace PaymentGatewayTests.Controllers
             var result = await Controller.Process(request);
 
             Assert.IsNotNull(result);
-            Assert.IsNotNull(result.GatewayError);
-            Assert.IsNotEmpty(result.GatewayError);
+            Assert.AreEqual(true, result.HasGatewayError);
+            Assert.IsNotNull(result.GatewayErrorMessage);
+            Assert.IsNotEmpty(result.GatewayErrorMessage);
         }
     }
 }

@@ -30,6 +30,7 @@ namespace PaymentGateway
             services.AddControllers();
             services.AddScoped<IProcessPaymentService, ProcessPaymentService>();
             services.AddScoped<ICurrencyRepository, HarcodedCurrencyRepository>();
+            services.AddScoped<IMerchantRepository, HardcodedMerchantRepository>();
             services.AddScoped<IPaymentValidator, PaymentValidator>();
         }
 
