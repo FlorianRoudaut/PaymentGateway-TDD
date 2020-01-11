@@ -32,6 +32,8 @@ namespace PaymentGateway
             services.AddScoped<ICurrencyRepository, HarcodedCurrencyRepository>();
             services.AddScoped<IMerchantRepository, HardcodedMerchantRepository>();
             services.AddScoped<IPaymentValidator, PaymentValidator>();
+            services.AddScoped<IPaymentHistoryService, PaymentHistoryService>();
+            services.AddScoped<IPaymentHistoryRepository, HardcodedPaymentHistoryRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

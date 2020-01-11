@@ -8,11 +8,10 @@ namespace PaymentGateway.Repositories
 {
     public class HardcodedPaymentHistoryRepository : IPaymentHistoryRepository
     {
-        private static List<PaymentHistory> InMemoryList;
+        private static List<PaymentHistory> InMemoryList = new List<PaymentHistory>();
 
         public HardcodedPaymentHistoryRepository()
         {
-            InMemoryList = new List<PaymentHistory>();
         }
 
         public async Task<List<PaymentHistory>> LoadAll(string merchantName)
