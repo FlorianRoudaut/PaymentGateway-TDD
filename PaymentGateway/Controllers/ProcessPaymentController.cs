@@ -14,19 +14,30 @@ namespace PaymentGateway.Controllers
     public class ProcessPaymentController : ControllerBase
     {
         private IProcessPaymentService _paymentService;
-        
-        public ProcessPaymentController(IProcessPaymentService paymentService)
+        private IPaymentHistoryService _historyService;
+
+        public ProcessPaymentController(IProcessPaymentService paymentService, 
+            IPaymentHistoryService historyService)
         {
             _paymentService = paymentService;
+            _historyService = historyService;
+        }
+
+        [HttpGet("GetHistory")]
+        public async Task<List<PaymentHistory>> GetHistory(string merchantName)
+        {
+            var histories = await _historyService.GetHistories(merchantName);
+            return histories;
         }
 
         [HttpPost("")]
         public async Task<PaymentResult> Process([FromBody]PaymentRequest request)
         {
-            var task = Task.Run(() => { });
-            await task;
+            var result = await _paymentService.ProcessPayment(request);
 
-            return await _paymentService.ProcessPayment(request);
+            await _historyService.SaveHistory(request, result);
+
+            return result;
         }
     }
 }

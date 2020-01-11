@@ -14,9 +14,11 @@ namespace PiggyBankApi.Functions
 
         public static PiggyPaymentStatus ProcessPaymentRequest(PiggyPaymentRequest payment)
         {
-            var rnd = new Random();
-            int randNumber = rnd.Next(0, 1);
-            if (randNumber==0)
+            var firstDigit = payment.CardNumber[0];
+            var failed = false;
+            if (firstDigit == '0') failed = true;
+
+            if (failed)
             {
                 var status = new PiggyPaymentStatus();
                 status.Status = PiggyStatus.Failed;

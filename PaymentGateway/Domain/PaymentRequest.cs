@@ -7,8 +7,6 @@ namespace PaymentGateway.Domain
 {
     public class PaymentRequest
     {
-        public Guid PaymentId { get; set; }
-        public DateTime CreatedAt { get; set; }
         public string MerchantName { get; set; }
         public string CardNumber { get; set; }
         public string Cvv { get; set; }

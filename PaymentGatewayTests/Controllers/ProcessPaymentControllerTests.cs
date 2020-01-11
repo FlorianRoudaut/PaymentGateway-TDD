@@ -18,7 +18,10 @@ namespace PaymentGatewayTests.Controllers
         [Test]
         public async Task ProcessPaymentControllerShouldReturnResult()
         {
+            
             var request = GlobalTestSetup.InitValidRequest();
+            var histories = await Controller.GetHistory(request.MerchantName);
+            var oldCount = histories.Count;
 
             var result = await Controller.Process(request);
 
@@ -31,6 +34,10 @@ namespace PaymentGatewayTests.Controllers
             Assert.IsNotEmpty(result.AcquiringBankStatus);
             Assert.IsNotNull(result.AcquiringBankPaymentId);
             Assert.IsNotEmpty(result.AcquiringBankPaymentId);
+
+            histories = await Controller.GetHistory(request.MerchantName);
+            var newCount = histories.Count;
+            Assert.AreEqual(oldCount+1, newCount);
         }
 
         [Test]

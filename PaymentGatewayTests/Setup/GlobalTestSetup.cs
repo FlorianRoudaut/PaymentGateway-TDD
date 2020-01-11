@@ -38,10 +38,17 @@ namespace PaymentGatewayTests.Setup
             return new ProcessPaymentService(paymentValidator, merchantRepository);
         }
 
+        public static PaymentHistoryService GetHistoryService()
+        {
+            var historyRepository = new HardcodedPaymentHistoryRepository();
+            return new PaymentHistoryService(historyRepository);
+        }
+
         public static ProcessPaymentController GetProcessPaymentController()
         {
             var paymentService = GetPaymentService();
-            return new ProcessPaymentController(paymentService);
+            var historyService = GetHistoryService();
+            return new ProcessPaymentController(paymentService, historyService);
         }
     }
 }
