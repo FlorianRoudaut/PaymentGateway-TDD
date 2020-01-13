@@ -11,7 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PiggyBankApi\PiggyBank.Api.csproj" />
+    <ProjectReference Include="../PiggyBankApi/PiggyBankApi.csproj" />
   </ItemGroup>
-
 </Project>

@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway", "PaymentGa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGatewayTests", "..\PaymentGatewayTests\PaymentGatewayTests.csproj", "{AF738227-24F9-4E5C-8A24-DD685FDF5603}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PiggyBank.Api", "..\PiggyBankApi\PiggyBank.Api.csproj", "{E522EAAE-C04D-4617-ADC7-6B2513277E2B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PiggyBankApi", "..\PiggyBankApi\PiggyBankApi.csproj", "{E522EAAE-C04D-4617-ADC7-6B2513277E2B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
