@@ -9,6 +9,7 @@ Should not be empty
 Should not be empty
 Can contain empty spaces
 Should have 16 digits
+Additional card number validatiosn can be found here https://stackoverflow.com/questions/9315647/regex-credit-card-number-tests
 
 ### CVV
 Should not be empty
