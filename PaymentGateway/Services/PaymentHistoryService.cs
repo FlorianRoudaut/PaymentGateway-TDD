@@ -21,6 +21,11 @@ namespace PaymentGateway.Services
             return await _historyRepository.LoadAll(merchantName);
         }
 
+        public async Task<PaymentHistory> GetPaymentHistory(Guid paymentId)
+        {
+            return await _historyRepository.GetById(paymentId);
+        }
+
         public async Task SaveHistory(PaymentRequest request, PaymentResult result)
         {
             var history = BuildHistory(request, result);
@@ -30,10 +35,10 @@ namespace PaymentGateway.Services
         private PaymentHistory BuildHistory(PaymentRequest request, PaymentResult result)
         {
             var history = new PaymentHistory();
-            history.PaymentId = Guid.NewGuid();
+            history.GatewayPaymentId = result.GatewayPaymentId;
             history.CreatedAt = DateTime.UtcNow;
             history.MerchantName = request.MerchantName;
-            history.CardNumber = request.CardNumber;
+            history.CardNumber = MaskCardNumber(request.CardNumber);
             history.Cvv = request.Cvv;
             history.ExpiryMonth = request.ExpiryMonth;
             history.ExpiryYear = request.ExpiryYear;
@@ -49,6 +54,21 @@ namespace PaymentGateway.Services
             history.ProcessedTime = result.ProcessedTime;
 
             return history;
+        }
+
+        private string MaskCardNumber(string cardNumber)
+        {
+            if (string.IsNullOrEmpty(cardNumber)) return "XXXX-XXXX-XXXX-XXXX";
+
+            var length = cardNumber.Length;
+            if (length > 4)
+            {
+                return "XXXX-XXXX-XXXX-"+cardNumber.Substring(length-4,4);
+            }
+            else
+            {
+                return "XXXX-XXXX-XXXX-XXXX";
+            }
         }
     }
 }

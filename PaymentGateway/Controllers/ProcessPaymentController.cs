@@ -30,6 +30,13 @@ namespace PaymentGateway.Controllers
             return histories;
         }
 
+        [HttpGet("GetPayment")]
+        public async Task<PaymentHistory> GetPaymentHistory(Guid paymentId)
+        {
+            var history = await _historyService.GetPaymentHistory(paymentId);
+            return history;
+        }
+
         [HttpPost("")]
         public async Task<PaymentResult> Process([FromBody]PaymentRequest request)
         {

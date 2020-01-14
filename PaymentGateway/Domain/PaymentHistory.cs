@@ -14,7 +14,7 @@ namespace PaymentGateway.Domain
         public string AcquiringBankStatus { get; set; }
         public string AcquiringBankPaymentId { get; set; }
         public DateTime ProcessedTime { get; set; }
-        public Guid PaymentId { get; set; }
+        public Guid GatewayPaymentId { get; set; }
         public DateTime CreatedAt { get; set; }
         public string MerchantName { get; set; }
         public string CardNumber { get; set; }

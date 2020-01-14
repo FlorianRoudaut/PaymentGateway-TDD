@@ -38,7 +38,14 @@ namespace PaymentGatewayTests.Controllers
             histories = await Controller.GetHistory(request.MerchantName);
             var newCount = histories.Count;
             Assert.AreEqual(oldCount+1, newCount);
+
+            var insertedPayment = await Controller.GetPaymentHistory(result.GatewayPaymentId);
+            Assert.IsNotNull(insertedPayment);
+
+            Assert.AreNotEqual(request.CardNumber, insertedPayment.CardNumber);
+            Assert.AreEqual(19, insertedPayment.CardNumber.Length);
         }
+
 
         [Test]
         public async Task ProcessPaymentControllerShouldReturnResultWithGatewayError()
@@ -51,6 +58,16 @@ namespace PaymentGatewayTests.Controllers
             Assert.AreEqual(true, result.HasGatewayError);
             Assert.IsNotNull(result.GatewayErrorMessage);
             Assert.IsNotEmpty(result.GatewayErrorMessage);
+
+            var insertedPayment = await Controller.GetPaymentHistory(result.GatewayPaymentId);
+            Assert.IsNotNull(insertedPayment);
+        }
+
+        [Test]
+        public async Task PaymentHistoryShouldBeNullIfPaymentIdIsNotValid()
+        {
+            var insertedPayment = await Controller.GetPaymentHistory(new System.Guid());
+            Assert.IsNull(insertedPayment);
         }
     }
 }

@@ -29,3 +29,7 @@ https://github.com/FlorianRoudaut/PaymentGateway-TDD/issues/5
 ###Sub Feature 2.2
 Merchants should have an API to load his previous payments
 https://github.com/FlorianRoudaut/PaymentGateway-TDD/issues/6
+
+###Sub Feature 2.3
+Payments history should have masked card number
+https://github.com/FlorianRoudaut/PaymentGateway-TDD/issues/7

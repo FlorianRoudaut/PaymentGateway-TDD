@@ -29,6 +29,20 @@ namespace PaymentGateway.Repositories
             return newList;
         }
 
+        public async Task<PaymentHistory> GetById(Guid paymentId)
+        {
+            if (paymentId == null) return null;
+
+            foreach (var history in InMemoryList)
+            {
+                if (paymentId.Equals(history.GatewayPaymentId))
+                {
+                    return history;
+                }
+            }
+            return null;
+        }
+
         public async Task Save(PaymentHistory history)
         {
             InMemoryList.Add(history);

@@ -11,5 +11,7 @@ namespace PaymentGateway.Services
         Task SaveHistory(PaymentRequest request, PaymentResult result);
 
         Task<List<PaymentHistory>> GetHistories(string merchantName);
+
+        Task<PaymentHistory> GetPaymentHistory(Guid paymentId);
     }
 }

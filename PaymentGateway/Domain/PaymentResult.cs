@@ -7,6 +7,7 @@ namespace PaymentGateway.Domain
 {
     public class PaymentResult
     {
+        public Guid GatewayPaymentId { get; set; }
         public bool HasGatewayError { get; set; }
         public string GatewayErrorMessage { get; set; }
         public string AcquiringBank { get; set; }

@@ -23,6 +23,7 @@ namespace PaymentGateway.Services
         public async Task<PaymentResult> ProcessPayment(PaymentRequest paymentRequest)
         {
             var result = new PaymentResult();
+            result.GatewayPaymentId = Guid.NewGuid();
 
             var errors = new List<string>();
             var time = DateTime.UtcNow;
